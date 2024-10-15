@@ -81,6 +81,13 @@ void viewstudentsaveragegrade(int countstudent, student* students, short gradesi
 	}
 }
 
+void viewstuppedstudents(int countstudent, student* students, short gradesize) {
+	for (short i = 0; i < length; i++)
+	{
+
+	}
+}
+
 int main()
 {
 	setlocale(LC_ALL, "RU");
