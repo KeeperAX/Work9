@@ -5,31 +5,31 @@ using namespace std;
 
 struct student
 {
-	string fio;
-	int numberGroup;
+	string fullName;
+	int groupNumber;
 	int grade[5];
 	float averageGrade;
 };
 
-void fillStudents(int countStudent, student* students, short gradeSize)
+void fillStudents(int studentsCount, student* students, short gradesCount)
 {
-	for (short i = 0; i < countStudent; i++)
+	for (short i = 0; i < studentsCount; i++)
 	{
 		cout << "\nСтудент # " << i + 1 << endl;
 		cout << "Введите ФИО: ";
 		cin.ignore();
-		getline(cin, students[i].fio);
+		getline(cin, students[i].fullName);
 		cout << "Введите номер группы: ";
-		cin >> students[i].numberGroup;
+		cin >> students[i].groupNumber;
 		cout << "Введите оценки (5 штук): ";
-		for (short j = 0; j < gradeSize; j++)
+		for (short j = 0; j < gradesCount; j++)
 		{
-			short mark;
-			cin >> mark;
-			if (mark <= 5 && mark >= 2)
+			short grade;
+			cin >> grade;
+			if (grade <= 5 && grade >= 2)
 			{
-				students[i].grade[j] = mark;
-				students[i].averageGrade += mark;
+				students[i].grade[j] = grade;
+				students[i].averageGrade += grade;
 			}
 			else
 			{
@@ -37,40 +37,55 @@ void fillStudents(int countStudent, student* students, short gradeSize)
 			}
 		}
 
-		students[i].averageGrade /= 5;
+		students[i].averageGrade /= gradesCount;
 	}
 }
 
-void sortStudentsByGroup(int countStudents, student* students)
+void sortStudentsByGroup(int studentsCount, student* students, short gradesCount)
 {
-	for (short i = 0; i < countStudents - 1; i++)
+	for (short i = 0; i < studentsCount - 1; i++)
 	{
-		for (short j = 0; j < countStudents - i - 1; j++)
+		for (short j = 0; j < studentsCount - i - 1; j++)
 		{
-			if (students[j].numberGroup > students[j + 1].numberGroup)
+			if (students[j].groupNumber > students[j + 1].groupNumber)
 			{
-				swap(students[j].numberGroup, students[j + 1].numberGroup);
+				swap(students[j], students[j + 1]);
 			}
 		}
 	}
 }
 
-void viewStudentsAverageGrade(int countStudents, student* students, short gradeSize)
+void viewStudentsAverageGrade(int studentsCount, student* students, short gradesCount)
 {
+	system("cls");
+	const int line_length = 40;
+	cout << string(line_length, '-') << endl;
+	cout << "Номер студента " << "\tId" << "\tНомер группы" << "Оценки\t" << endl;
+	cout << string(line_length, '-') << endl;
+	for (short i = 0; i < studentsCount; i++)
+	{
+		cout << i + 1 << "\t" << students[i].fullName << "\t" << students[i].groupNumber << "\t";
+		for (short j = 0; j < gradesCount; j++)
+		{
+			cout << students[i].grade[j] << " ";
+		}
+		cout << "\t" << endl;
+		cout << string(line_length, '-') << endl;
+	}
+	cout << endl;
+
+	cout << "\tХорошисты" << endl;
 	int countstudents = 0;
-	for (short i = 0; i < countStudents; i++)
+	for (short i = 0; i < studentsCount; i++)
 	{
 		if (students[i].averageGrade <= 4)
 		{
 			continue;
 		}
-
-		cout << endl;
-		cout << "Студент # " << i + 1 << endl;
 		cout << "ФИО: ";
-		cout << students[i].fio;
+		cout << students[i].fullName;
 		cout << "\nНомер группы: ";
-		cout << students[i].numberGroup;
+		cout << students[i].groupNumber;
 		cout << endl;
 		countstudents++;
 	}
@@ -81,26 +96,39 @@ void viewStudentsAverageGrade(int countStudents, student* students, short gradeS
 	}
 }
 
-void viewStuppedStudents(int countStudent, student* students, short gradeSize) {
-	for (short i = 0; i < length; i++)
+void viewStuppedStudents(int studentsCount, student* students, short gradeSize) {
+	short dvoechnic = 0, ans = 0;
+	for (short i = 0; i < studentsCount; i++)
 	{
-
+		for (short j = 0; j < gradeSize; j++)
+		{
+			if (students[i].grade[j] == 2)
+			{
+				dvoechnic++;
+			}
+			if (dvoechnic == 1)
+			{
+				ans++; break;
+			}
+		}
 	}
+	cout << "Кол-во двоечников: " << ans << endl;
 }
 
 int main()
 {
 	setlocale(LC_ALL, "RU");
 	cout << "Введите количество студентов: ";
-	int countStudents;
-	cin >> countStudents;
+	int studentsCount;
+	cin >> studentsCount;
 
-	student* students = new student[countStudents];
-	short gradeSize = sizeof(students[1].grade) / sizeof(students[1].grade[0]);
+	student* students = new student[studentsCount];
+	short gradesCount = sizeof(students[1].grade) / sizeof(students[1].grade[0]);
 
-	fillStudents(countStudents, students, gradeSize);
-	sortStudentsByGroup(countStudents, students);
-	viewStudentsAverageGrade(countStudents, students, gradeSize);
+	fillStudents(studentsCount, students, gradesCount);
+	sortStudentsByGroup(studentsCount, students, gradesCount);
+	viewStudentsAverageGrade(studentsCount, students, gradesCount);
+	viewStuppedStudents(studentsCount, students, gradesCount);
 
 	delete[] students;
 }
